@@ -1,16 +1,28 @@
-# This is a sample Python script.
-
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+#!/usr/bin/env python
+"""Python Ray Tracer"""
+from image import Image
+from color import Color
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+def main():
+    WIDTH = 3
+    HEIGHT = 2
+    im = Image(WIDTH, HEIGHT)
+    red = Color(x=1, y=0, z=0)
+    green = Color(x=0, y=1, z=0)
+    blue = Color(x=0, y=0, z=1)
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    im.set_pixel(0, 0, red)
+    im.set_pixel(1, 0, green)
+    im.set_pixel(2, 0, blue)
+
+    im.set_pixel(0, 1, red + green)
+    im.set_pixel(1, 1, red + blue + green)
+    im.set_pixel(2, 1, red * 0.001)
+
+    with open("test.ppm", "w") as img_file:
+        im.write_ppm(img_file)
+
+
+if __name__ == "__main__":
+    main()
