@@ -13,12 +13,13 @@ def main():
     WIDTH = 320
     HEIGHT = 200
     camera = Vector(0, 0, -1)
-    objects = [Sphere(Point(0, 0, 0), 0.5, Color.from_hex("#FF0000"))]
+    objects = [Sphere(Point(-0.4, 0, 0), 0.5, Color.from_hex("#FF0000")),
+               Sphere(Point(0.4, 0, 0), 0.5, Color.from_hex("#0000FF"))]
     scene = Scene(camera, objects, WIDTH, HEIGHT)
     engine = RenderEngine()
     image = engine.render(scene)
 
-    with open("test01.ppm", "w") as img_file:
+    with open("test02.ppm", "w") as img_file:
         image.write_ppm(img_file)
 
 
