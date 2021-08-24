@@ -31,6 +31,7 @@ class RenderEngine:
                 x = x0 + i * xstep
                 ray = Ray(camera, Point(x, y) - camera)
                 pixels.set_pixel(i, j, self.ray_trace(ray, scene))
+            print("{:3.0f}%".format(float(j) / float(height) * 100), end="\r")
         return pixels
 
     def ray_trace(self, ray, scene):
@@ -68,7 +69,7 @@ class RenderEngine:
                     object_color
                     * material.diffuse
                     * max(normal.dot_product(to_light.direction), 0)
-                      )
+            )
             # Specular Shading (Blinn-Phong)
             half_vector = (to_light.direction + to_camera).normalize()
             color += (
