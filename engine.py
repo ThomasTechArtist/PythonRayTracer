@@ -1,6 +1,7 @@
 """
  engine.py by Thomas on 8/22/2021
 """
+
 from color import Color
 from image import Image
 from point import Point
@@ -39,7 +40,8 @@ class RenderEngine:
         if object_hit is None:
             return color
         hit_position = ray.origin + ray.direction * distance_hit
-        color += self.color_at(object_hit, hit_position, scene)
+        hit_normal = object_hit.normal(hit_position)
+        color += self.color_at(object_hit, hit_position, hit_normal, scene)
         return color
 
     def find_nearest(self, ray, scene):
@@ -52,5 +54,26 @@ class RenderEngine:
                 object_hit = obj
         return distance_min, object_hit
 
-    def color_at(self, obj_hit, hit_position, scene):
-        return obj_hit.material
+    def color_at(self, obj_hit, hit_position, normal, scene):
+        material = obj_hit.material
+        object_color = material.color_at(hit_position)
+        to_camera = scene.camera - hit_position
+        specular_S = 50
+        color = material.ambient * Color.from_hex("#000000")
+        # Light calculations
+        for light in scene.lights:
+            to_light = Ray(hit_position, light.position - hit_position)
+            # Diffuse Shading (Lambert)
+            color += (
+                    object_color
+                    * material.diffuse
+                    * max(normal.dot_product(to_light.direction), 0)
+                      )
+            # Specular Shading (Blinn-Phong)
+            half_vector = (to_light.direction + to_camera).normalize()
+            color += (
+                    light.color
+                    * material.specular
+                    * max(normal.dot_product(half_vector), 0) ** specular_S
+            )
+        return color
